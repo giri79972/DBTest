@@ -1,0 +1,124 @@
+Db Side:
+
+create database dsmodel7pmdb;
+
+
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> show tables;
++------------------------+
+| Tables_in_dsmodel7pmdb |
++------------------------+
+| django_migrations      |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
++----------------------------+
+| Tables_in_dsmodel7pmdb     |
++----------------------------+
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| dbapp_emp                  |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
++----------------------------+
+11 rows in set (0.00 sec)
+
+
+
+python manage.py makemigrations
+
+
+D:\Inst\HYD\Durga Soft\DJANGO\22012019\DBTest>python manage.py sqlmigrate DBapp 0001
+BEGIN;
+--
+-- Create model EMP
+--
+CREATE TABLE `DBapp_emp` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `sno` integer NOT NULL, `sname` varchar(20) NOT NULL, `sal` integer NOT NULL);
+COMMIT;
+
+
+>python manage.py shell
+
+
+CURD
+===========
+C-Create
+U-update
+R-Retrive
+D-Delete
+
+C-Create
+=================
+>>> from DBapp.models import EMP
+>>> a=EMP(sno=10,sname='Sai',sal=10000)
+>>> a.save()
+
+>>> b=EMP(sno=13,sname='Nani',sal=30000)
+>>> b.save()
+>>> c=EMP.objects.create(sno=12,sname='Sathya',sal=20000)
+>>> d=EMP.objects.create(sno=14,sname='kamal',sal=40000)
+
+R-Retrive
+==========
+
+from DBapp.models import EMP
+>>> x=EMP.objects.all()
+>>> print(x)
+<QuerySet [<EMP: Sai>, <EMP: Sathya>, <EMP: Nani>]>
+
+U-update
+=========
+from DBapp.models import EMP
+a=EMP(sno=10,sname='Sai',sal=10000)
+a.save()
+a.sal=15000
+a.save()
+
+a.sname='giri'
+>>> a.save()
+
+
+Filter and Exclude():
+=======================
+
+mysql> select * from dbapp_emp;
++----+-----+--------+-------+
+| id | sno | sname  | sal   |
++----+-----+--------+-------+
+|  1 |  10 | Sai    | 10000 |
+|  2 |  12 | Sathya | 20000 |
+|  3 |  13 | Nani   | 30000 |
+|  4 |  10 | giri   | 15000 |
++----+-----+--------+-------+
+4 rows in set (0.00 sec)
+
+>>> x=EMP.objects.filter(sno=12)
+>>> print(x)
+<QuerySet [<EMP: Sathya>]>
+
+
+>>> x=EMP.objects.exclude(sno=12)
+>>> print(x)
+<QuerySet [<EMP: Sai>, <EMP: Nani>, <EMP: giri>]>
+
+Delete
+=========
+
+>>> x=EMP.objects.get(sno=12)
+>>> x.delete()
+(1, {'DBapp.EMP': 1})
+
+
+>>> x=EMP.objects.get(sname='giri')
+>>> x.delete()
+(1, {'DBapp.EMP': 1})
+
